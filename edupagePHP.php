@@ -1,3 +1,7 @@
+/*LukasKraljić
+FlorijanGotal
+Tehnicka Skola Cakovec*/
+
 <?php
 //echo phpinfo()."<br>";
 $subdomain = "tsck";
