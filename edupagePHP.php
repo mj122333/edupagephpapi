@@ -81,30 +81,95 @@ curl_setopt_array($curl, array(
 ));
 
 $response = curl_exec($curl);
-
 libxml_use_internal_errors(true);
 $dom = new DOMDocument();
-$dom -> loadHTML($response);
+$dom -> loadHTML('<?xml encoding="utf-8" ?>' . $response);
 
 $items = $dom -> getElementsByTagName('span');
 
-$objavi="<head><meta charset='UTF-8'></head>";
-$objavi=$objavi."#######<br>Današnje zamjene<br><b>razred</b><br>sat<br>";
+$css ="*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size:30px;
+}
+body{
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+table {
+  border-collapse: collapse;
+  margin: 5vh 0;
+}
+
+tr {
+  border: 1px solid black;
+}
+
+td {
+  padding: 10px;
+}
+
+
+
+tr:nth-child(odd) {
+    background-color: #abd18e;
+}
+
+.table-container {
+  overflow: hidden;
+  position: absolute;
+  top: 100%;
+  
+  animation: scroll-up 25s linear infinite;
+  
+}
+
+
+@keyframes scroll-up {
+  from { top: 100%; }
+  to { top: -100%; }
+}";
+
+$objavi="<head><meta charset='UTF-8'><style>".$css."</style></head>";
+
+$objavi=$objavi."<div class='table-container'>";
+$objavi=$objavi."<table>";
+
+$objavi=$objavi."<tr><td style='font-weight:bold'>RAZRED</td><td style='font-weight:bold'>SAT</td><td style='font-weight:bold'>PREDMET &nbsp;&nbsp;&nbsp; DANAS</td></tr>";
 /*preskoci jedan segment?*/
 $preskacem=1;
+$trenutni_razred= 1;
+$foreach_stage=0;//korišteno kako bi se znalo ima li neki razred više sati zamjene jer zada ne upisuje razred automatski
 foreach ($items as $item){
     if (!$preskacem){
-        echo $item->nodeId." ".$item->nodeValue." ".$item->parentNode->getAttribute('class')."<br>-----------<br>";
-        if (strpos($item->parentNode->getAttribute('class'), 'header')!==false)
-            $objavi=$objavi."----------<br><b>".$item->nodeValue."</b><br>";     //razred
-        if (strpos($item->parentNode->getAttribute('class'), 'period')!==false)
-            $objavi=$objavi."".$item->nodeValue."<br>";                 //sat
-        if (strpos($item->parentNode->getAttribute('class'), 'info')!==false)
-            $item->nodeValue;                                                           //tko-koga + promjena prostorije        TODO promjena prostorije!
+        //echo $item->nodeId." ".$item->nodeValue." ".$item->parentNode->getAttribute('class')."<br>-----------<br>";
+        if (strpos($item->parentNode->getAttribute('class'), 'header')!==false){
+            if($item->nodeValue > 0){
+                $objavi=$objavi."<tr><td style='font-weight:bold'>".$item->nodeValue."</td>";     //razred
+                $trenutni_razred = "<tr><td style='font-weight:bold'>".$item->nodeValue."</td>";
+                $foreach_stage =0;
+            }    
+        }
+
+            
+        if (strpos($item->parentNode->getAttribute('class'), 'period')!==false){
+            if($foreach_stage ==2)$objavi=$objavi.$trenutni_razred;     //ako se razred nije ispisao ispisi
+
+            $objavi=$objavi."<td>".$item->nodeValue.".sat </td>";     //razred
+            $foreach_stage =1;
+    }
+        if (strpos($item->parentNode->getAttribute('class'), 'info')!==false){
+            $objavi=$objavi."<td>".$item->nodeValue."</td></tr>";         //tko-koga + promjena prostorije        TODO promjena prostorije!
+            $foreach_stage =2;
+        }
     }
     else
         $preskacem--;
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*zamjene sljedeći dan*/
@@ -143,28 +208,48 @@ $response = curl_exec($curl);
 
 libxml_use_internal_errors(true);
 $dom = new DOMDocument();
-$dom -> loadHTML($response);
+$dom -> loadHTML('<?xml encoding="utf-8" ?>' . $response);
 
 $items = $dom -> getElementsByTagName('span');
-$objavi=$objavi."########<br>Sutrašnje zamjene<br><b>razred</b><br>sat<br>";
+$objavi=$objavi."<tr><td style='font-weight:bold'>RAZRED</td><td style='font-weight:bold'>SAT</td><td style='font-weight:bold'>PREDMET &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SUTRA</td></tr>";
+
 /*preskoci jedan segment?*/
 $preskacem=1;
+$trenutni_razred= 1;
+$foreach_stage=0;//korišteno kako bi se znalo ima li neki razred više sati zamjene jer zada ne upisuje razred automatski
 foreach ($items as $item){
     if (!$preskacem){
         //echo $item->nodeId." ".$item->nodeValue." ".$item->parentNode->getAttribute('class')."<br>-----------<br>";
-        if (strpos($item->parentNode->getAttribute('class'), 'header')!==false)
-            $objavi=$objavi."----------<br><p style='color:red'".$item->nodeValue."</b><br>";     //razred
-        if (strpos($item->parentNode->getAttribute('class'), 'period')!==false)
-            $objavi=$objavi."".$item->nodeValue."<br>";                             //sat
-        if (strpos($item->parentNode->getAttribute('class'), 'info')!==false)
-            ;//$objavi=$objavi.$item->nodeValue."<br>";                                                           //tko-koga + promjena prostorije        TODO promjena prostorije!
+        if (strpos($item->parentNode->getAttribute('class'), 'header')!==false){
+            if($item->nodeValue > 0){
+                $objavi=$objavi."<tr><td style='font-weight:bold'>".$item->nodeValue."</td>";     //razred
+                $trenutni_razred = "<tr><td style='font-weight:bold'>".$item->nodeValue."</td>";
+                $foreach_stage =0;
+            }    
+        }
+
+            
+        if (strpos($item->parentNode->getAttribute('class'), 'period')!==false){
+            if($foreach_stage ==2)$objavi=$objavi.$trenutni_razred;     //ako se razred nije ispisao ispisi
+
+            $objavi=$objavi."<td>".$item->nodeValue.".sat </td>";     //razred
+            $foreach_stage =1;
+    }
+        if (strpos($item->parentNode->getAttribute('class'), 'info')!==false){
+            $objavi=$objavi."<td>".$item->nodeValue."</td></tr>";         //tko-koga + promjena prostorije        TODO promjena prostorije!
+            $foreach_stage =2;
+        }
     }
     else
         $preskacem--;
 }
-$objavi=$objavi."oooooooooooo<br>kraljić<br>gotal<br>mj<br><b>https://tsck.edupage.org/substitution/</b><br>oooooooooooo";
-$objavi=$objavi."<style>*{color:white;}</style>";
 
+
+$objavi=$objavi."<tr colspan='3'><td>kraljić,petković,gotal,mj</td></tr>";
+$objavi=$objavi."<style>*{color:black;}</style>";
+
+$objavi=$objavi."</table>";
+$objavi=$objavi."</div>";
 echo $objavi;
 
 $myfile = fopen("zamjeneDanas.htm", "w");
