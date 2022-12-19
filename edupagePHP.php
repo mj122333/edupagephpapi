@@ -91,12 +91,13 @@ $css ="*{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-size:30px;
+    font-size:20px;
 }
 body{
     display: flex;
     justify-content: center;
     overflow: hidden;
+    background-color: black;
 }
 
 table {
@@ -112,29 +113,29 @@ td {
   padding: 10px;
 }
 
-
-
 tr:nth-child(odd) {
     background-color: #abd18e;
 }
 
-.table-container {
-  overflow: hidden;
-  position: absolute;
-  top: 100%;
-  
-  animation: scroll-up 25s linear infinite;
-  
+tr:nth-child(even) {
+    color: white;
 }
 
+.table-container {
+  overflow: hidden;
+  position: fixed;
+  top: 100%;
+  animation: scroll-up 15s linear infinite;
+}
 
 @keyframes scroll-up {
   from { top: 100%; }
   to { top: -100%; }
 }";
-
+$objavi=$objavi."<html>";
 $objavi="<head><meta charset='UTF-8'><style>".$css."</style></head>";
 
+$objavi=$objavi."<body>";
 $objavi=$objavi."<div class='table-container'>";
 $objavi=$objavi."<table>";
 
@@ -150,20 +151,20 @@ foreach ($items as $item){
             if($item->nodeValue > 0){
                 $objavi=$objavi."<tr><td style='font-weight:bold'>".$item->nodeValue."</td>";     //razred
                 $trenutni_razred = "<tr><td style='font-weight:bold'>".$item->nodeValue."</td>";
-                $foreach_stage =0;
+                $foreach_stage = 0;
             }    
-        }
-
-            
+        }    
         if (strpos($item->parentNode->getAttribute('class'), 'period')!==false){
-            if($foreach_stage ==2)$objavi=$objavi.$trenutni_razred;     //ako se razred nije ispisao ispisi
+            if($foreach_stage == 2)$objavi=$objavi.$trenutni_razred;     //ako se razred nije ispisao ispisi
 
             $objavi=$objavi."<td>".$item->nodeValue.".sat </td>";     //razred
-            $foreach_stage =1;
-    }
+            $foreach_stage = 1;
+        }
         if (strpos($item->parentNode->getAttribute('class'), 'info')!==false){
+            if(str_contains($item->nodeValue, "Zamjena"))
+                $item->nodeValue = substr($item->nodeValue, 0, strpos($item->nodeValue," - Zamjena:"));
             $objavi=$objavi."<td>".$item->nodeValue."</td></tr>";         //tko-koga + promjena prostorije        TODO promjena prostorije!
-            $foreach_stage =2;
+            $foreach_stage = 2;
         }
     }
     else
@@ -230,14 +231,16 @@ foreach ($items as $item){
 
             
         if (strpos($item->parentNode->getAttribute('class'), 'period')!==false){
-            if($foreach_stage ==2)$objavi=$objavi.$trenutni_razred;     //ako se razred nije ispisao ispisi
+            if($foreach_stage == 2)$objavi=$objavi.$trenutni_razred;     //ako se razred nije ispisao ispisi
 
             $objavi=$objavi."<td>".$item->nodeValue.".sat </td>";     //razred
-            $foreach_stage =1;
+            $foreach_stage = 1;
     }
         if (strpos($item->parentNode->getAttribute('class'), 'info')!==false){
+            if(str_contains($item->nodeValue, "Zamjena"))
+                $item->nodeValue = substr($item->nodeValue, 0, strpos($item->nodeValue," - Zamjena:"));
             $objavi=$objavi."<td>".$item->nodeValue."</td></tr>";         //tko-koga + promjena prostorije        TODO promjena prostorije!
-            $foreach_stage =2;
+            $foreach_stage = 2;
         }
     }
     else
@@ -245,11 +248,13 @@ foreach ($items as $item){
 }
 
 
-$objavi=$objavi."<tr colspan='3'><td>kraljić,petković,gotal,mj</td></tr>";
-$objavi=$objavi."<style>*{color:black;}</style>";
+$objavi=$objavi."<tr colspan='3'><td>kraljić, petković, gotal, mj</td></tr>";
+$objavi=$objavi."<style></style>";
 
 $objavi=$objavi."</table>";
 $objavi=$objavi."</div>";
+$objavi=$objavi."</body>";
+$objavi=$objavi."</html>";
 echo $objavi;
 
 $myfile = fopen("zamjeneDanas.htm", "w");
