@@ -1,7 +1,3 @@
-/*LukasKraljić
-FlorijanGotal
-Tehnicka Skola Cakovec*/
-
 <?php
 //echo phpinfo()."<br>";
 $subdomain = "tsck";
@@ -92,18 +88,19 @@ $dom -> loadHTML($response);
 
 $items = $dom -> getElementsByTagName('span');
 
-$objavi="#######<br>Današnje zamjene<br><b>razred</b><br>sat<br>";
+$objavi="<head><meta charset='UTF-8'></head>";
+$objavi=$objavi."#######<br>Današnje zamjene<br><b>razred</b><br>sat<br>";
 /*preskoci jedan segment?*/
 $preskacem=1;
 foreach ($items as $item){
     if (!$preskacem){
-        //echo $item->nodeId." ".$item->nodeValue." ".$item->parentNode->getAttribute('class')."<br>-----------<br>";
+        echo $item->nodeId." ".$item->nodeValue." ".$item->parentNode->getAttribute('class')."<br>-----------<br>";
         if (strpos($item->parentNode->getAttribute('class'), 'header')!==false)
             $objavi=$objavi."----------<br><b>".$item->nodeValue."</b><br>";     //razred
         if (strpos($item->parentNode->getAttribute('class'), 'period')!==false)
             $objavi=$objavi."".$item->nodeValue."<br>";                 //sat
         if (strpos($item->parentNode->getAttribute('class'), 'info')!==false)
-            ;                                                           //tko-koga + promjena prostorije        TODO promjena prostorije!
+            $item->nodeValue;                                                           //tko-koga + promjena prostorije        TODO promjena prostorije!
     }
     else
         $preskacem--;
@@ -116,7 +113,7 @@ $data = [
 	[
 		null,
 		[
-			"date" => date("Y-m-d", strtotime('now-1day')),             //dio za odredivanje koji dan dohvacamo
+			"date" => date("Y-m-d", strtotime('now+1day')),             //dio za odredivanje koji dan dohvacamo
 			"mode" => "classes"
 		]
 	],
@@ -149,7 +146,6 @@ $dom = new DOMDocument();
 $dom -> loadHTML($response);
 
 $items = $dom -> getElementsByTagName('span');
-
 $objavi=$objavi."########<br>Sutrašnje zamjene<br><b>razred</b><br>sat<br>";
 /*preskoci jedan segment?*/
 $preskacem=1;
@@ -157,9 +153,9 @@ foreach ($items as $item){
     if (!$preskacem){
         //echo $item->nodeId." ".$item->nodeValue." ".$item->parentNode->getAttribute('class')."<br>-----------<br>";
         if (strpos($item->parentNode->getAttribute('class'), 'header')!==false)
-            $objavi=$objavi."----------<br><b>".$item->nodeValue."</b><br>";     //razred
+            $objavi=$objavi."----------<br><p style='color:red'".$item->nodeValue."</b><br>";     //razred
         if (strpos($item->parentNode->getAttribute('class'), 'period')!==false)
-            $objavi=$objavi."".$item->nodeValue."<br>";                 //sat
+            $objavi=$objavi."".$item->nodeValue."<br>";                             //sat
         if (strpos($item->parentNode->getAttribute('class'), 'info')!==false)
             ;//$objavi=$objavi.$item->nodeValue."<br>";                                                           //tko-koga + promjena prostorije        TODO promjena prostorije!
     }
@@ -167,12 +163,13 @@ foreach ($items as $item){
         $preskacem--;
 }
 $objavi=$objavi."oooooooooooo<br>kraljić<br>gotal<br>mj<br><b>https://tsck.edupage.org/substitution/</b><br>oooooooooooo";
+$objavi=$objavi."<style>*{color:white;}</style>";
+
 echo $objavi;
 
-/*curl_close($curl);
-$myfile = fopen("testfile.txt", "w");
-fwrite($myfile, $response);
-*/
+$myfile = fopen("zamjeneDanas.htm", "w");
+fwrite($myfile, $objavi);
+
 //echo $response;
 
 ?>
