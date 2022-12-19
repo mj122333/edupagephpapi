@@ -161,7 +161,7 @@ foreach ($items as $item){
             $foreach_stage = 1;
         }
         if (strpos($item->parentNode->getAttribute('class'), 'info')!==false){
-            if(str_contains($item->nodeValue, "Zamjena"))
+            if(strpos($item->nodeValue, "Zamjena")!==false)			//PHP verzija < 8
                 $item->nodeValue = substr($item->nodeValue, 0, strpos($item->nodeValue," - Zamjena:"));
             $objavi=$objavi."<td>".$item->nodeValue."</td></tr>";         //tko-koga + promjena prostorije        TODO promjena prostorije!
             $foreach_stage = 2;
@@ -237,7 +237,7 @@ foreach ($items as $item){
             $foreach_stage = 1;
     }
         if (strpos($item->parentNode->getAttribute('class'), 'info')!==false){
-            if(str_contains($item->nodeValue, "Zamjena"))
+            if(strpos($item->nodeValue, "Zamjena")!==false)				//php verzija < 8
                 $item->nodeValue = substr($item->nodeValue, 0, strpos($item->nodeValue," - Zamjena:"));
             $objavi=$objavi."<td>".$item->nodeValue."</td></tr>";         //tko-koga + promjena prostorije        TODO promjena prostorije!
             $foreach_stage = 2;
