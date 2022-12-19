@@ -87,59 +87,60 @@ $dom -> loadHTML('<?xml encoding="utf-8" ?>' . $response);
 
 $items = $dom -> getElementsByTagName('span');
 
-$css ="*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-size:20px;
+$css ="
+:root{
+	--container-height:-1000px;
 }
-body{
-    display: flex;
-    justify-content: center;
-    overflow: hidden;
-    background-color: black;
-}
-
-table {
-  border-collapse: collapse;
-  margin: 5vh 0;
-}
-
-tr {
-  border: 1px solid black;
-}
-
-td {
-  padding: 10px;
-}
-
-tr:nth-child(odd) {
-    background-color: #abd18e;
-}
-
-tr:nth-child(even) {
-    color: white;
-}
-
-.table-container {
-  overflow: hidden;
-  position: fixed;
-  top: 100%;
-  animation: scroll-up 15s linear infinite;
-}
-
-@keyframes scroll-up {
-  from { top: 100%; }
-  to { top: -100%; }
-}";
-$objavi=$objavi."<html>";
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-size:20px;
+	}
+	body{
+	display: flex;
+	justify-content: center;
+	overflow: hidden;
+	background-color: black;
+	margin:0;
+	color: white;
+	}
+	table {
+	border-collapse: collapse;
+	margin: 5vh 0;
+	}
+	tr {
+	border: 1px solid black;
+	}
+	td {
+	padding: 10px;
+	}
+	tr:nth-child(odd) {
+	background-color: #abd18e;
+	color: black;
+	}
+	tr:nth-child(even) {
+	color: white;
+	}
+	.table-container {
+	overflow: hidden;
+	position: fixed;
+	top: 100%;
+	animation: scroll-up 20s linear infinite;
+	}
+	@keyframes scroll-up {
+	from { top: 100%; }
+	to { top: var(--container-height); }
+	}";
+$objavi="<html>";
 $objavi="<head><meta charset='UTF-8'><style>".$css."</style></head>";
 
 $objavi=$objavi."<body>";
 $objavi=$objavi."<div class='table-container'>";
 $objavi=$objavi."<table>";
 
-$objavi=$objavi."<tr><td style='font-weight:bold'>RAZRED</td><td style='font-weight:bold'>SAT</td><td style='font-weight:bold'>PREDMET &nbsp;&nbsp;&nbsp; DANAS</td></tr>";
+$objavi=$objavi."<tr><td colspan='3' style='text-align: center;font-size:40px;font-weight:bold;'>DANAŠNJE ZAMJENE</td></tr>
+				<tr><td style='font-weight:bold'>RAZRED</td><td style='font-weight:bold'>SAT</td><td style='font-weight:bold'>PREDMET</td></tr>";
 /*preskoci jedan segment?*/
 $preskacem=1;
 $trenutni_razred= 1;
@@ -212,7 +213,8 @@ $dom = new DOMDocument();
 $dom -> loadHTML('<?xml encoding="utf-8" ?>' . $response);
 
 $items = $dom -> getElementsByTagName('span');
-$objavi=$objavi."<tr><td style='font-weight:bold'>RAZRED</td><td style='font-weight:bold'>SAT</td><td style='font-weight:bold'>PREDMET &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SUTRA</td></tr>";
+$objavi=$objavi."<tr><td colspan='3' style='text-align: center;font-size:40px;font-weight:bold;'>SUTRAŠNJE ZAMJENE</td></tr>
+				<tr><td style='font-weight:bold'>RAZRED</td><td style='font-weight:bold'>SAT</td><td style='font-weight:bold'>PREDMET</td></tr>";
 
 /*preskoci jedan segment?*/
 $preskacem=1;
@@ -248,11 +250,12 @@ foreach ($items as $item){
 }
 
 
-$objavi=$objavi."<tr colspan='3'><td>kraljić, petković, gotal, mj</td></tr>";
+$objavi=$objavi."<tr><td colspan='3'> <center>Zasluge: Kraljić, Petković, Gotal, MJ</center></td></tr>";
 $objavi=$objavi."<style></style>";
 
 $objavi=$objavi."</table>";
 $objavi=$objavi."</div>";
+$objavi=$objavi."<script>document.documentElement.style.setProperty('--container-height', -document.querySelector('.table-container').clientHeight+'px');</script>";
 $objavi=$objavi."</body>";
 $objavi=$objavi."</html>";
 echo $objavi;
