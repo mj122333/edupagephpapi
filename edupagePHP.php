@@ -126,7 +126,7 @@ $css ="
 	overflow: hidden;
 	position: fixed;
 	top: 100%;
-	animation: scroll-up 20s linear infinite;
+	animation: scroll-up 60s linear infinite;
 	}
 	@keyframes scroll-up {
 	from { top: 100%; }
@@ -162,9 +162,15 @@ foreach ($items as $item){
             $foreach_stage = 1;
         }
         if (strpos($item->parentNode->getAttribute('class'), 'info')!==false){
-            if(strpos($item->nodeValue, "Zamjena")!==false)			//PHP verzija < 8
-                $item->nodeValue = substr($item->nodeValue, 0, strpos($item->nodeValue," - Zamjena:"));
-            $objavi=$objavi."<td>".$item->nodeValue."</td></tr>";         //tko-koga + promjena prostorije        TODO promjena prostorije!
+            if(strpos($item->nodeValue, "➔")!==false) {
+                if(strpos($item->nodeValue, "Zamjena")!==false)			//PHP verzija < 8
+                    $item->nodeValue = substr($item->nodeValue, 0, strpos($item->nodeValue," - Zamjena:"));
+                $objavi=$objavi."<td>".$item->nodeValue."</td></tr>";         //tko-koga + promjena prostorije        TODO promjena prostorije! 
+            }
+            else {
+                $objavi=$objavi."<td> Slobodni sat </td>";
+            }
+            
             $foreach_stage = 2;
         }
     }
@@ -239,9 +245,14 @@ foreach ($items as $item){
             $foreach_stage = 1;
     }
         if (strpos($item->parentNode->getAttribute('class'), 'info')!==false){
-            if(strpos($item->nodeValue, "Zamjena")!==false)				//php verzija < 8
-                $item->nodeValue = substr($item->nodeValue, 0, strpos($item->nodeValue," - Zamjena:"));
-            $objavi=$objavi."<td>".$item->nodeValue."</td></tr>";         //tko-koga + promjena prostorije        TODO promjena prostorije!
+            if(strpos($item->nodeValue, "➔")!==false) {
+                if(strpos($item->nodeValue, "Zamjena")!==false)			//PHP verzija < 8
+                    $item->nodeValue = substr($item->nodeValue, 0, strpos($item->nodeValue," - Zamjena:"));
+                $objavi=$objavi."<td>".$item->nodeValue."</td></tr>";         //tko-koga + promjena prostorije        TODO promjena prostorije! 
+            }
+            else {
+                $objavi=$objavi."<td> Slobodni sat </td>";
+            }
             $foreach_stage = 2;
         }
     }
@@ -250,7 +261,7 @@ foreach ($items as $item){
 }
 
 
-$objavi=$objavi."<tr><td colspan='3'> <center>Zasluge: Kraljić, Petković, Gotal, MJ</center></td></tr>";
+$objavi=$objavi."<tr><td colspan='3'> <center>Kraljić, Petković, Gotal, MJ</center></td></tr>";
 $objavi=$objavi."<style></style>";
 
 $objavi=$objavi."</table>";
