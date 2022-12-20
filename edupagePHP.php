@@ -162,7 +162,10 @@ foreach ($items as $item){
             $foreach_stage = 1;
         }
         if (strpos($item->parentNode->getAttribute('class'), 'info')!==false){
-            if(strpos($item->nodeValue, "➔")!==false) {
+            if(strpos($item->nodeValue, "Nema određenih zamjena za ovaj dan.")!==false) {
+                $objavi=$objavi."<td colspan='3'><center>Nema određenih zamjena za ovaj dan.</center></td>";
+            }
+            else if(strpos($item->nodeValue, "➔")!==false) {
                 if(strpos($item->nodeValue, "Zamjena")!==false)			//PHP verzija < 8
                     $item->nodeValue = substr($item->nodeValue, 0, strpos($item->nodeValue," - Zamjena:"));
                 $objavi=$objavi."<td>".$item->nodeValue."</td></tr>";         //tko-koga + promjena prostorije        TODO promjena prostorije! 
@@ -236,16 +239,18 @@ foreach ($items as $item){
                 $foreach_stage =0;
             }    
         }
-
             
         if (strpos($item->parentNode->getAttribute('class'), 'period')!==false){
             if($foreach_stage == 2)$objavi=$objavi.$trenutni_razred;     //ako se razred nije ispisao ispisi
 
             $objavi=$objavi."<td>".$item->nodeValue.".sat </td>";     //razred
             $foreach_stage = 1;
-    }
+        }
         if (strpos($item->parentNode->getAttribute('class'), 'info')!==false){
-            if(strpos($item->nodeValue, "➔")!==false) {
+            if(strpos($item->nodeValue, "Nema određenih zamjena za ovaj dan.")!==false) {
+                $objavi=$objavi."<td colspan='3'><center>Nema određenih zamjena za ovaj dan.</center></td>";
+            }
+            else if(strpos($item->nodeValue, "➔")!==false) {
                 if(strpos($item->nodeValue, "Zamjena")!==false)			//PHP verzija < 8
                     $item->nodeValue = substr($item->nodeValue, 0, strpos($item->nodeValue," - Zamjena:"));
                 $objavi=$objavi."<td>".$item->nodeValue."</td></tr>";         //tko-koga + promjena prostorije        TODO promjena prostorije! 
